@@ -4,7 +4,10 @@ class AnimalsController < ApplicationController
   # GET /animals
   # GET /animals.json
   def index
-    @animals = Animal.all
+    @animals = Animal.order(:item_position, :created_at)
+    @red_animals = Animal.red.order(:item_position, :created_at)
+    @blue_animals = Animal.blue.order(:item_position, :created_at)
+    @green_animals = Animal.green.order(:item_position, :created_at)
   end
 
   # GET /animals/1
@@ -59,6 +62,14 @@ class AnimalsController < ApplicationController
       format.html { redirect_to animals_url, notice: 'Animal was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def sort
+    params['animal'].each_with_index do |id, index|
+      Animal.where(id: id).update_all(item_position: index + 1)
+    end
+
+    head :ok
   end
 
   private

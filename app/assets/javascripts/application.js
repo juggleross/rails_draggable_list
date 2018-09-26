@@ -16,3 +16,19 @@
 //= require activestorage
 //= require turbolinks
 //= require_tree .
+
+document.addEventListener('turbolinks:load', function() {
+  $('.sortable').sortable({
+    update: function(event, ui) {
+      let data = $(this).sortable('serialize')
+      Rails.ajax({
+        url: '/animals/sort',
+        type: 'PUT',
+        beforeSend: function() {
+          return true
+        },
+        data: data
+      })
+    }
+  });
+})
